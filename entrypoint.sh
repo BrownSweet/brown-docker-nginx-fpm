@@ -1,3 +1,6 @@
 #!/bin/sh
-php-fpm -D
-nginx -g 'daemon off;'
+nginx -g 'daemon off;' &
+php-fpm -D             &
+
+wait
+

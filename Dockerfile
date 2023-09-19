@@ -27,6 +27,9 @@ RUN apt-get update && apt-get install -y nginx \
 ADD extensions/install-php-extensions-v1.5.35 /usr/local/bin/
 RUN mv  /usr/local/bin/install-php-extensions-v1.5.35 /usr/local/bin/install-php-extensions
 RUN chmod uga+x /usr/local/bin/install-php-extensions && sync
+
+
+
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 
@@ -110,6 +113,9 @@ EXPOSE 9501
 
 COPY www /www
 WORKDIR /www
+RUN apt-get update && apt-get install -y dumb-init
+RUN apt-get install procps strace tcpdump telnet lsof curl iproute2
+ENTRYPOINT ["dumb-init", "--"]
 ###执行脚本
 CMD ["sh","/entrypoint.sh"]
 
