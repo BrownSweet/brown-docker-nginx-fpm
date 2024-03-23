@@ -1,5 +1,5 @@
 #必须使用官方镜像
-FROM php:7.3.24-fpm
+FROM php:8.2.17-fpm
 
 ARG CONTAINER_PACKAGE_URL=mirrors.tuna.tsinghua.edu.cn
 ARG NGINX_CONF=nginx.conf
@@ -12,8 +12,8 @@ ARG PHP_FPM_CONF=php-fpm.conf
 ARG TZ=Asia/Shanghai
 
 
-RUN  sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
-    && sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+RUN  sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
+    && sed -i 's/snapshot.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources
 
 
 # 设置时区
@@ -59,16 +59,14 @@ RUN install-php-extensions \
           zip \
           sockets \
           swoole \
-          yaf \
           memcached \
-          mongodb \
           mcrypt \
           iconv \
           mbstring \
           intl \
           mysqli \
-          gd \
-          bcmath
+          gd
+
 
 #####nginx配置文件#####
 
