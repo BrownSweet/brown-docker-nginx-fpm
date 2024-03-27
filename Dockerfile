@@ -37,7 +37,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/tmp/composer
-RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
+#RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
 
 
 RUN install-php-extensions \
@@ -66,6 +66,11 @@ RUN install-php-extensions \
           intl \
           mysqli \
           gd
+
+RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
+RUN pecl install grpc
+RUN docker-php-ext-enable grpc
+
 
 
 #####nginx配置文件#####
