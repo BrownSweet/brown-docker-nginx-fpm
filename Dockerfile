@@ -1,5 +1,5 @@
 #必须使用官方镜像
-FROM php:8.2.17-fpm
+FROM php:8.3.4-fpm
 
 ARG CONTAINER_PACKAGE_URL=mirrors.tuna.tsinghua.edu.cn
 ARG NGINX_CONF=nginx.conf
@@ -37,7 +37,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/tmp/composer
-RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
+#RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
 
 
 RUN install-php-extensions \
