@@ -1,5 +1,5 @@
 #必须使用官方镜像
-FROM php:8.2.17-fpm
+FROM php:8.1.27-fpm
 
 ARG CONTAINER_PACKAGE_URL=mirrors.tuna.tsinghua.edu.cn
 ARG NGINX_CONF=nginx.conf
