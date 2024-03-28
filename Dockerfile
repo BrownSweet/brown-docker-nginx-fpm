@@ -37,7 +37,6 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/tmp/composer
-RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
 
 
 RUN install-php-extensions \
