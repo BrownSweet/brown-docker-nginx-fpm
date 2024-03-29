@@ -1,5 +1,5 @@
 #必须使用官方镜像
-FROM php:8.0.30-fpm
+FROM php:8.2.17-fpm
 
 ARG CONTAINER_PACKAGE_URL=mirrors.tuna.tsinghua.edu.cn
 ARG NGINX_CONF=nginx.conf
@@ -12,8 +12,8 @@ ARG PHP_FPM_CONF=php-fpm.conf
 ARG TZ=Asia/Shanghai
 
 
-RUN  sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
-    && sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
+RUN  sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
+    && sed -i 's/snapshot.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources
 
 
 # 设置时区
@@ -37,6 +37,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/tmp/composer
+#RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
 
 
 RUN install-php-extensions \
@@ -58,22 +59,21 @@ RUN install-php-extensions \
           zip \
           sockets \
           swoole \
-          yaf \
           memcached \
-          mongodb \
           mcrypt \
           iconv \
           mbstring \
           intl \
           mysqli \
-          gd \
-          bcmath
+          gd
 
 RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
 RUN pecl install grpc
 RUN docker-php-ext-enable grpc
 RUN pecl install protobuf
 RUN docker-php-ext-enable protobuf
+
+
 #####nginx配置文件#####
 
 RUN rm -rf /etc/nginx/nginx.conf \
@@ -118,7 +118,7 @@ EXPOSE 9501
 COPY www /www
 WORKDIR /www
 RUN apt-get update && apt-get install -y dumb-init
-RUN apt-get install procps strace tcpdump telnet lsof curl iproute2
+RUN apt-get install procps strace tcpdump telnet lsof curl iproute2 -y
 ENTRYPOINT ["dumb-init", "--"]
 ###执行脚本
 CMD ["sh","/entrypoint.sh"]
