@@ -67,11 +67,7 @@ RUN install-php-extensions \
           mysqli \
           gd
 
-RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
-RUN pecl install grpc
-RUN docker-php-ext-enable grpc
-RUN pecl install protobuf
-RUN docker-php-ext-enable protobuf
+
 
 
 #####nginx配置文件#####
