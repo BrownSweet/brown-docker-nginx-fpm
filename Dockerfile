@@ -39,8 +39,15 @@ RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar 
 ENV COMPOSER_HOME=/tmp/composer
 #RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
 
+RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
+#RUN pecl install grpc
+#RUN docker-php-ext-enable grpc
+#RUN pecl install protobuf
+#RUN docker-php-ext-enable protobuf
 
 RUN install-php-extensions \
+          grpc \
+          protobuf \
           bcmath \
           bz2 \
           calendar \
@@ -67,11 +74,6 @@ RUN install-php-extensions \
           mysqli \
           gd
 
-RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
-RUN pecl install grpc
-RUN docker-php-ext-enable grpc
-RUN pecl install protobuf
-RUN docker-php-ext-enable protobuf
 
 
 #####nginx配置文件#####
