@@ -66,10 +66,11 @@ RUN install-php-extensions \
           intl \
           mysqli \
           gd
-
 RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
 RUN pecl install grpc
 RUN docker-php-ext-enable grpc
+RUN pecl install protobuf
+RUN docker-php-ext-enable protobuf
 #####nginx配置文件#####
 
 RUN rm -rf /etc/nginx/nginx.conf \
@@ -119,3 +120,39 @@ ENTRYPOINT ["dumb-init", "--"]
 ###执行脚本
 CMD ["sh","/entrypoint.sh"]
 
+
+
+
+
+
+
+
+
+
+
+ location ^~ /a {
+        alias /www/grpc/a/public;
+        try_files $uri $uri/ @a;
+
+        location ~ \.php$ {
+            fastcgi_pass 127.0.0.1:9000; # 根据你的 PHP-FPM 配置调整
+            include        fastcgi-php.conf;
+            include fastcgi_params;
+        }
+    }
+location @a {
+        rewrite /a/(.*)$ /www/grpc/a/public/index.php?/$1 last;
+    }
+    location ^~ /b {
+        alias /www/grpc/b/public/;
+         try_files $uri $uri/ @b;
+
+        location ~ \.php$ {
+            fastcgi_pass 127.0.0.1:9000; # 根据你的 PHP-FPM 配置调整
+            include        fastcgi-php.conf;
+            include fastcgi_params;
+        }
+    }
+location @b {
+        rewrite /b/(.*)$ /www/grpc/b/public/index.php?/$1 last;
+    }
