@@ -24,8 +24,8 @@ RUN apt-get update && apt-get install -y nginx \
     && rm -rf /var/cache/apt/* /tmp/* /usr/share/man /var/lib/apt/lists/*
 
 
-ADD extensions/install-php-extensions-v1.5.35 /usr/local/bin/
-RUN mv  /usr/local/bin/install-php-extensions-v1.5.35 /usr/local/bin/install-php-extensions
+ADD extensions/install-php-extensions-v2.2.5 /usr/local/bin/
+RUN mv  /usr/local/bin/install-php-extensions-v2.2.5 /usr/local/bin/install-php-extensions
 RUN chmod uga+x /usr/local/bin/install-php-extensions && sync
 
 
