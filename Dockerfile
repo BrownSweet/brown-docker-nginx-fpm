@@ -1,5 +1,5 @@
 #必须使用官方镜像
-FROM php:8.1.27-fpm
+FROM php:7.3.24-fpm
 
 ARG CONTAINER_PACKAGE_URL=mirrors.tuna.tsinghua.edu.cn
 ARG NGINX_CONF=nginx.conf
@@ -12,8 +12,8 @@ ARG PHP_FPM_CONF=php-fpm.conf
 ARG TZ=Asia/Shanghai
 
 
-RUN  sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources \
-    && sed -i 's/snapshot.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list.d/debian.sources
+RUN  sed -i 's/deb.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list \
+    && sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list
 
 
 # 设置时区
@@ -24,8 +24,8 @@ RUN apt-get update && apt-get install -y nginx \
     && rm -rf /var/cache/apt/* /tmp/* /usr/share/man /var/lib/apt/lists/*
 
 
-ADD extensions/install-php-extensions-v2.2.5 /usr/local/bin/
-RUN mv  /usr/local/bin/install-php-extensions-v2.2.5 /usr/local/bin/install-php-extensions
+ADD extensions/install-php-extensions-v1.5.35 /usr/local/bin/
+RUN mv  /usr/local/bin/install-php-extensions-v1.5.35 /usr/local/bin/install-php-extensions
 RUN chmod uga+x /usr/local/bin/install-php-extensions && sync
 
 
@@ -59,18 +59,17 @@ RUN install-php-extensions \
           zip \
           sockets \
           swoole \
+          yaf \
           memcached \
+          mongodb \
           mcrypt \
           iconv \
           mbstring \
           intl \
           mysqli \
-          gd
-RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
-RUN pecl install grpc
-RUN docker-php-ext-enable grpc
-RUN pecl install protobuf
-RUN docker-php-ext-enable protobuf
+          gd \
+          bcmath
+
 #####nginx配置文件#####
 
 RUN rm -rf /etc/nginx/nginx.conf \
@@ -115,9 +114,8 @@ EXPOSE 9501
 COPY www /www
 WORKDIR /www
 RUN apt-get update && apt-get install -y dumb-init
-RUN apt-get install procps strace tcpdump telnet lsof curl iproute2 -y
+RUN apt-get install procps strace tcpdump telnet lsof curl iproute2
 ENTRYPOINT ["dumb-init", "--"]
 ###执行脚本
 CMD ["sh","/entrypoint.sh"]
-
 
