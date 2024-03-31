@@ -1,5 +1,5 @@
 #必须使用官方镜像
-FROM php:8.1.27-fpm
+FROM php:8.2.17-fpm
 
 ARG CONTAINER_PACKAGE_URL=mirrors.tuna.tsinghua.edu.cn
 ARG NGINX_CONF=nginx.conf
@@ -37,14 +37,17 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 RUN curl -o /usr/bin/composer https://mirrors.aliyun.com/composer/composer.phar \
     && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/tmp/composer
-RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
+#RUN composer config -g repos.packagist composer https://mirrors.cloud.tencent.com/composer/
 
 RUN apt-get update && apt-get install protobuf-compiler libprotobuf-dev zlib1g-dev -y
-
+#RUN pecl install grpc
+#RUN docker-php-ext-enable grpc
+#RUN pecl install protobuf
+#RUN docker-php-ext-enable protobuf
 
 RUN install-php-extensions \
-    grpc \
-    protobuf \
+          grpc \
+          protobuf \
           bcmath \
           bz2 \
           calendar \
@@ -70,6 +73,8 @@ RUN install-php-extensions \
           intl \
           mysqli \
           gd
+
+
 
 #####nginx配置文件#####
 
@@ -119,5 +124,4 @@ RUN apt-get install procps strace tcpdump telnet lsof curl iproute2 -y
 ENTRYPOINT ["dumb-init", "--"]
 ###执行脚本
 CMD ["sh","/entrypoint.sh"]
-
 
